@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cycle Joint – Crypto Deposit</title>
+</head>
+<body>
+  <h1>Cycle Joint – Crypto Deposit (Test)</h1>
+
+  <button id="connectBtn">Connect MetaMask</button>
+  <p id="status"></p>
+
+  <script>
+    const connectBtn = document.getElementById("connectBtn");
+    const statusText = document.getElementById("status");
+
+    async function connectWallet() {
+      if (typeof window.ethereum === "undefined") {
+        statusText.innerText = "MetaMask not detected. Please install the MetaMask extension.";
+        return;
+      }
+
+      try {
+        // Ask MetaMask for accounts
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+
+        const wallet = accounts[0];
+        statusText.innerText = "Connected wallet: " + wallet;
+      } catch (error) {
+        console.error(error);
+        statusText.innerText = "User rejected connection or an error occurred.";
+      }
+    }
+
+    connectBtn.addEventListener("click", connectWallet);
+  </script>
+</body>
+</html>
