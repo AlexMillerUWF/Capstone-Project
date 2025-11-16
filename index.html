@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
-    /* Basic reset */
     * {
       margin: 0;
       padding: 0;
@@ -25,7 +24,6 @@
       color: inherit;
     }
 
-    /* Top navigation */
     .nav {
       display: flex;
       justify-content: space-between;
@@ -70,14 +68,12 @@
       color: #111827;
     }
 
-    /* Page layout */
     .page {
       max-width: 1100px;
       margin: 0 auto;
       padding: 2rem 1.5rem 3rem;
     }
 
-    /* Hero section */
     .hero {
       display: grid;
       grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
@@ -145,7 +141,6 @@
       color: #6b7280;
     }
 
-    /* Placeholder "image" block to mimic the site’s visual section */
     .hero-card {
       border-radius: 1.5rem;
       padding: 1.5rem;
@@ -195,7 +190,6 @@
       background: #22c55e;
     }
 
-    /* Content sections */
     .section {
       margin-top: 2.5rem;
     }
@@ -231,7 +225,6 @@
       margin-bottom: 0.9rem;
     }
 
-    /* MetaMask area */
     .wallet-section {
       display: flex;
       flex-wrap: wrap;
@@ -245,11 +238,10 @@
     }
 
     .wallet-status strong {
-      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: 0.88rem;
     }
 
-    /* Footer */
     .footer {
       border-top: 1px solid #e5e7eb;
       padding: 1.5rem 1.5rem 2rem;
@@ -268,13 +260,12 @@
       }
 
       .nav-links {
-        display: none; /* keep nav simple on small screens */
+        display: none;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Top nav -->
   <header class="nav">
     <div class="nav-left">
       <span class="logo-dot"></span>
@@ -288,9 +279,7 @@
     </nav>
   </header>
 
-  <!-- Main page content -->
   <main class="page">
-    <!-- Hero section -->
     <section class="hero">
       <div>
         <div class="hero-text-eyebrow">Pensacola, Florida</div>
@@ -300,11 +289,13 @@
           or take an electric bike home with you.
         </p>
         <p class="hero-location">
-          32 N Palafox St, Downtown Pensacola, FL 32502 &middot; Open 10 AM &ndash; 6 PM
+          32 N Palafox St, Downtown Pensacola, FL 32502 · Open 10 AM – 6 PM
         </p>
 
         <div class="hero-actions">
-          <button class="btn-primary">Book a tour now</button>
+          <button class="btn-primary" type="button">
+            Book a tour now
+          </button>
           <span class="hero-note">Crypto deposits (test) powered by MetaMask below.</span>
         </div>
       </div>
@@ -313,7 +304,73 @@
         <div class="hero-card-tag">Tours &amp; Rentals</div>
         <div class="hero-card-title">See more of Pensacola with less effort.</div>
         <div class="hero-card-text">
-          P
+          Pedal assist and throttle-powered bikes let you cover more ground, soak in the views,
+          and still have energy for dinner afterward.
+        </div>
+        <div class="hero-card-pill">
+          <span class="hero-card-pill-dot"></span>
+          <span>Daily guided rides &amp; hourly rentals</span>
+        </div>
+      </aside>
+    </section>
 
-          <!-- redeploy -->
+    <section class="section">
+      <h2 class="section-title">Crypto Deposits (Test)</h2>
+      <p class="section-subtitle">
+        This is a test integration to explore using Ethereum and MetaMask for holding rental deposits in a secure
+        smart contract escrow.
+      </p>
 
+      <div class="section-card">
+        <h3>Connect your wallet</h3>
+        <p>
+          Click the button below to connect MetaMask. In a full version of this feature, you would be able to pay
+          and later receive your rental deposit through a smart contract.
+        </p>
+
+        <div class="wallet-section">
+          <!-- THIS is the button you’re looking for -->
+          <button id="connectBtn" class="btn-primary" type="button">
+            Connect MetaMask
+          </button>
+          <p id="status" class="wallet-status">
+            Not connected.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Cycle Joint · Electric Bike Tours, Rentals, Repairs, &amp; Sales · Pensacola, FL
+  </footer>
+
+  <!-- MetaMask script -->
+  <script>
+    const connectBtn = document.getElementById("connectBtn");
+    const statusText = document.getElementById("status");
+
+    async function connectWallet() {
+      if (typeof window.ethereum === "undefined") {
+        statusText.innerText = "MetaMask not detected. Please install the MetaMask browser extension.";
+        return;
+      }
+
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+
+        const wallet = accounts[0];
+        const shortWallet = wallet.slice(0, 6) + "..." + wallet.slice(-4);
+        statusText.innerHTML = "Connected wallet: <strong>" + shortWallet + "</strong>";
+      } catch (error) {
+        console.error(error);
+        statusText.innerText = "User rejected connection or an error occurred.";
+      }
+    }
+
+    connectBtn.addEventListener("click", connectWallet);
+  </script>
+</body>
+</html>
