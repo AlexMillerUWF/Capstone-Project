@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cycle Joint – Staff Rental Dashboard (Mockup)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0b1120;
+      --bg-alt: #020617;
+      --card-bg: #020617;
+      --border: #1e293b;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.12);
+      --accent-soft-strong: rgba(56, 189, 248, 0.22);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+      --warning: #eab308;
+      --success: #22c55e;
+      --radius-lg: 18px;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #1e293b 0, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top nav */
+    .topbar {
+      height: 56px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .topbar-logo-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: conic-gradient(from 160deg, #38bdf8, #22c55e, #06b6d4, #38bdf8);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.9);
+    }
+
+    .topbar-title {
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 0.86rem;
+      color: #e5e7eb;
+    }
+
+    .topbar-subtitle {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .badge {
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .user-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+    }
+
+    .user-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #38bdf8, #22c55e);
+      display: inline-block;
+    }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 1.5rem auto 2rem;
+      padding: 0 1rem;
+      gap: 1.25rem;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, #0b1120 0, #020617 50%);
+      padding: 1.25rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      min-height: 400px;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .rental-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .rental-item {
+      padding: 0.55rem 0.7rem;
+      border-radius: 0.9rem;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.85);
+      cursor: pointer;
+      transition: border 0.12s ease, background 0.12s ease, transform 0.08s ease;
+    }
+
+    .rental-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .rental-item.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft-strong);
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18) 0, rgba(15, 23, 42, 0.95) 42%);
+    }
+
+    .rental-item-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .rental-id {
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    .rental-status-pill {
+      font-size: 0.75rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, 0.1);
+      color: #4ade80;
+    }
+
+    .rental-status-pill.overdue {
+      background: rgba(248, 113, 113, 0.15);
+      color: #fca5a5;
+    }
+
+    .rental-item-body {
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .rental-item-body strong {
+      color: #e5e7eb;
+    }
+
+    .sidebar-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .sidebar-meta span {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    /* Main content */
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    .card {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95) 0, rgba(2, 6, 23, 0.98) 55%);
+      padding: 1rem 1.1rem 1.05rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.65rem;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .card-subtitle {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, rgba(30, 64, 175, 0), rgba(148, 163, 184, 0.3), rgba(30, 64, 175, 0));
+      margin: 0.45rem 0 0.8rem;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem 1rem;
+      font-size: 0.8rem;
+    }
+
+    .detail-label {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .detail-value {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.78rem;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, 0.15);
+      color: #4ade80;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #4ade80;
+    }
+
+    .status-chip.pending {
+      background: rgba(234, 179, 8, 0.14);
+      color: #fde047;
+    }
+
+    .status-chip.pending .status-dot {
+      background: #eab308;
+    }
+
+    .status-chip.danger {
+      background: rgba(239, 68, 68, 0.14);
+      color: #fca5a5;
+    }
+
+    .status-chip.danger .status-dot {
+      background: #ef4444;
+    }
+
+    /* Damage & actions */
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin: 0.35rem 0 0.7rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .tag.accent {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: #e0f2fe;
+    }
+
+    .note-box {
+      border-radius: 0.9rem;
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+      padding: 0.55rem 0.7rem;
+      font-size: 0.78rem;
+      background: rgba(15, 23, 42, 0.75);
+      color: var(--muted);
+      margin-bottom: 0.7rem;
+    }
+
+    .thumb-row {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .thumb {
+      width: 52px;
+      height: 38px;
+      border-radius: 0.6rem;
+      background: linear-gradient(135deg, #1d4ed8, #22c55e);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+    }
+
+    .thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 15%, rgba(248, 250, 252, 0.35) 0, transparent 38%);
+      opacity: 0.7;
+    }
+
+    .thumb-label {
+      font-size: 0.7rem;
+      color: #cbd5f5;
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.35rem;
+    }
+
+    .light-pill {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    /* Buttons */
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+
+    .btn {
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      transition: background 0.12s ease, border 0.12s ease, transform 0.08s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: 0 14px 26px rgba(56, 189, 248, 0.4);
+      color: #0b1120;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0284c7, #0ea5e9);
+    }
+
+    .btn-outline {
+      border-color: var(--border);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: transparent;
+      color: var(--muted);
+    }
+
+    .footer-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: right;
+      margin-top: 0.4rem;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-subtitle {
+        display: none;
+      }
+      .layout {
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo-dot"></span>
+      <div>
+        <div class="topbar-title">CYCLE JOINT</div>
+        <div class="topbar-subtitle">Staff Rental Dashboard · Mock UI</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="badge">Network: Ethereum L2 (Test)</span>
+      <span class="badge">Role: Inspector / Approver</span>
+      <span class="user-pill">
+        <span class="user-avatar"></span>
+        <span>Staff – Alex</span>
+      </span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- Sidebar: rental list -->
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-section-title">Active Rentals</div>
+        <div class="rental-list">
+          <div class="rental-item active">
+            <div class="rental-item-header">
+              <span class="rental-id">CJ-2025-0421</span>
+              <span class="rental-status-pill">Out on Rental</span>
+            </div>
+            <div class="rental-item-body">
+              <span><strong>Alex Miller</strong> · Bike #B-14</span>
+              <span>Due back: 12:15 PM</span>
+            </div>
+          </div>
+          <div class="rental-item">
+            <div class="rental-item-header">
+              <span class="rental-id">CJ-2025-0419</span>
+              <span class="rental-status-pill overdue">Pending Inspection</span>
+            </div>
+            <div class="rental-item-body">
+              <span><strong>Jordan Lee</strong> · Bike #B-07</span>
+              <span>Returned: 11:42 AM</span>
+            </div>
+          </div>
+          <div class="rental-item">
+            <div class="rental-item-header">
+              <span class="rental-id">CJ-2025-0417</span>
+              <span class="rental-status-pill">Completed</span>
+            </div>
+            <div class="rental-item-body">
+              <span><strong>Chris Taylor</strong> · Bike #B-03</span>
+              <span>Refunded: 10:18 AM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="sidebar-section-title">Today’s Summary</div>
+        <div class="sidebar-meta">
+          <span><span>Active rentals</span><span>3</span></span>
+          <span><span>Inspections pending</span><span>2</span></span>
+          <span><span>Deposits in escrow</span><span>5</span></span>
+          <span><span>USDC held</span><span>375 USDC</span></span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <section class="main">
+      <div class="grid">
+        <!-- Booking & customer details -->
+        <article class="card">
+          <header class="card-header">
+            <div>
+              <div class="card-title">Booking Details · CJ-2025-0421</div>
+              <div class="card-subtitle">Electric Bike Rental · Downtown Pensacola</div>
+            </div>
+            <span class="status-chip">
+              <span class="status-dot"></span>
+              Active · Out on Rental
+            </span>
+          </header>
+          <div class="section-divider"></div>
+
+          <div class="detail-grid">
+            <div>
+              <div class="detail-label">Customer</div>
+              <div class="detail-value">Alex Miller</div>
+            </div>
+            <div>
+              <div class="detail-label">Contact</div>
+              <div class="detail-value">alex@example.com</div>
+            </div>
+            <div>
+              <div class="detail-label">Bike</div>
+              <div class="detail-value">#B-14 · Step-Through E-Bike</div>
+            </div>
+            <div>
+              <div class="detail-label">Rental Window</div>
+              <div class="detail-value">10:15 AM – 12:15 PM</div>
+            </div>
+            <div>
+              <div class="detail-label">Status</div>
+              <div class="detail-value">Out on rental · On time</div>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <div class="detail-grid">
+            <div>
+              <div class="detail-label">Wallet Address</div>
+              <div class="detail-value mono">0x1234…ABCD</div>
+            </div>
+            <div>
+              <div class="detail-label">Deposit Method</div>
+              <div class="detail-value">USDC via MetaMask</div>
+            </div>
+            <div>
+              <div class="detail-label">Customer Deposit</div>
+              <div class="detail-value">75 USDC</div>
+            </div>
+            <div>
+              <div class="detail-label">On-Chain Booking ID</div>
+              <div class="detail-value mono">CJ-2025-0421</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Blockchain deposit card -->
+        <article class="card">
+          <header class="card-header">
+            <div>
+              <div class="card-title">Blockchain Deposit & Escrow</div>
+              <div class="card-subtitle">Smart contract–backed rental deposit (mock data)</div>
+            </div>
+            <span class="status-chip">
+              <span class="status-dot"></span>
+              Escrow · Deposit Held
+            </span>
+          </header>
+          <div class="section-divider"></div>
+
+          <div class="detail-grid">
+            <div>
+              <div class="detail-label">Escrow Status</div>
+              <div class="detail-value">Deposit received & locked</div>
+            </div>
+            <div>
+              <div class="detail-label">Token</div>
+              <div class="detail-value">USDC (L2)</div>
+            </div>
+            <div>
+              <div class="detail-label">Smart Contract</div>
+              <div class="detail-value mono">0xESCROW…1234</div>
+            </div>
+            <div>
+              <div class="detail-label">Deposit Tx</div>
+              <div class="detail-value mono">0xDEPOSIT…7890</div>
+            </div>
+          </div>
+
+          <div class="tag-row">
+            <span class="tag accent">Immutable audit trail</span>
+            <span class="tag">View on Block Explorer</span>
+          </div>
+
+          <div class="note-box">
+            Funds for this rental are currently held in a smart contract escrow. Staff cannot withdraw funds directly; they must finalize an inspection outcome and trigger a refund or penalty through the approved workflow.
+          </div>
+
+          <div class="pill-row">
+            <span class="light-pill">Dispute window: 4 hours</span>
+            <span class="light-pill">Inspector role required</span>
+            <span class="light-pill">Approver · Multisig</span>
+          </div>
+        </article>
+      </div>
+
+      <!-- Inspection & actions -->
+      <article class="card">
+        <header class="card-header">
+          <div>
+            <div class="card-title">Inspection, Damage Reporting & Refund Outcome</div>
+            <div class="card-subtitle">Used by staff after the bike is returned</div>
+          </div>
+          <span class="status-chip pending">
+            <span class="status-dot"></span>
+            Awaiting Return
+          </span>
+        </header>
+        <div class="section-divider"></div>
+
+        <div class="detail-grid">
+          <div>
+            <div class="detail-label">Inspection Status</div>
+            <div class="detail-value">Not started · Bike out</div>
+          </div>
+          <div>
+            <div class="detail-label">Expected Return</div>
+            <div class="detail-value">Today · 12:15 PM</div>
+          </div>
+          <div>
+            <div class="detail-label">Proposed Refund</div>
+            <div class="detail-value">— (pending inspection)</div>
+          </div>
+          <div>
+            <div class="detail-label">Withheld Amount</div>
+            <div class="detail-value">—</div>
+          </div>
+        </div>
+
+        <div class="tag-row">
+          <span class="tag">No damage reported</span>
+          <span class="tag">Minor cosmetic damage</span>
+          <span class="tag">Major damage / unsafe</span>
+        </div>
+
+        <div class="note-box">
+          When the bike is returned, staff will record condition, attach photos, and propose a full, partial, or no refund. The smart contract then enforces the outcome on-chain, sending refunded funds to the rider and withheld funds to Cycle Joint.
+        </div>
+
+        <div class="thumb-row">
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+          <div class="thumb"></div>
+        </div>
+        <div class="thumb-label">Example damage photos (for illustration only)</div>
+
+        <div class="button-row">
+          <button class="btn btn-primary" type="button">Record Return & Start Inspection</button>
+          <button class="btn btn-outline" type="button">View History & Audit Log</button>
+          <button class="btn btn-ghost" type="button">More booking actions</button>
+        </div>
+
+        <div class="footer-note">
+          This dashboard is a visual mockup only. In a real system, buttons would trigger
+          smart contract calls and update on-chain escrow status.
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
